@@ -1,6 +1,6 @@
 {
   "name": "@toriihq/react-tippy",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "React tippy on steroids",
   "main": "dist/react-tippy.js",
   "files": [
