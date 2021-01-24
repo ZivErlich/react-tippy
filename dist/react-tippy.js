@@ -141,6 +141,7 @@ var Defaults = exports.Defaults = {
   distance: 10,
   offset: 0,
   hideOnClick: true,
+  hideOnScroll: true,
   multiple: false,
   followCursor: false,
   inertia: false,
@@ -418,6 +419,7 @@ var defaultProps = {
   theme: 'dark',
   offset: 0,
   hideOnClick: true,
+  hideOnScroll: true,
   multiple: false,
   followCursor: false,
   inertia: false,
@@ -629,6 +631,7 @@ var Tooltip = function (_Component) {
           theme: this.props.theme,
           offset: this.props.offset,
           hideOnClick: this.props.hideOnClick,
+          hideOnScroll: this.props.hideOnScroll,
           multiple: this.props.multiple,
           size: this.props.size,
           followCursor: this.props.followCursor,
@@ -1584,6 +1587,7 @@ function getEventListenerHandlers(el, popper, settings) {
       interactiveBorder = settings.interactiveBorder,
       distance = settings.distance,
       hideOnClick = settings.hideOnClick,
+      hideOnScroll = settings.hideOnScroll,
       trigger = settings.trigger,
       touchHold = settings.touchHold,
       touchWait = settings.touchWait;
@@ -1663,6 +1667,7 @@ function getEventListenerHandlers(el, popper, settings) {
         var triggerHide = function triggerHide() {
           document.body.removeEventListener('mouseleave', hide);
           document.removeEventListener('mousemove', handleMousemove);
+          document.removeEventListener('scroll', hide);
           hide();
         };
 
@@ -1684,6 +1689,9 @@ function getEventListenerHandlers(el, popper, settings) {
         }
       };
 
+      if (hideOnScroll) {
+        document.body.addEventListener('scroll', hide);
+      }
       document.body.addEventListener('mouseleave', hide);
       document.addEventListener('mousemove', handleMousemove);
 
@@ -2357,7 +2365,9 @@ var Tippy = function () {
           // Prevents shown() from firing more than once from early transition cancellations
           data._onShownFired = true;
 
-          _this.callbacks.shown.call(popper);
+          if (typeof _this.callbacks.shown === 'function') {
+            _this.callbacks.shown.call(popper);
+          }
         });
       });
     }
